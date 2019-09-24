@@ -55,6 +55,7 @@ class Board extends React.Component {
             squares:Array(16).fill(null),
             direction:null
         };
+        this.initialState=this.state;
         //this.handleKeyDown=this.handleKeyDown.bind(this);
     }
 
@@ -70,24 +71,27 @@ class Board extends React.Component {
         if(zero_count===0) {
             for(i=0;i<4;i++) {
                 for(var j=0;j<4;j++) {
+                    console.log('hello: '+i+","+j)
                     let point=4*i+j;
-                    let up=4*(i-1)+j;
+                    /*let up=4*(i-1)+j;
                     let down=4*(i+1)+j;
                     let right=4*i+j+1;
-                    let left=4*i+j-1;
-                    console.log(point+","+up+","+down+","+left+","+right);
-                    console.log(values[point]+","+values[up]+","+values[down]+","+values[left]+","+values[right]);
+                    let left=4*i+j-1;*/
 
-                    if(up>=0 && values[point]===values[up]) {
+                    if((i-1)>=0 && values[point]===values[4*(i-1)+j]) {
+                        console.log('hi1');
                         return false;
                     }
-                    else if(down<n && values[point]===values[down]) {
+                    else if((i+1)<4 && values[point]===values[4*(i+1)+j]) {
+                        console.log('hi2');
                         return false;
                     }
-                    else if(left>=0 && values[point]===values[left]) {
+                    else if((j-1)>=0 && values[point]===values[4*i+j-1]) {
+                        console.log('hi3');
                         return false;
                     }
-                    else if(right<n && values[point]===values[right]) {
+                    else if((j+1)<4 && values[point]===values[4*i+j+1]) {
+                        console.log('hi4');
                         return false;
                     }
                 }
@@ -150,7 +154,7 @@ class Board extends React.Component {
         if(JSON.stringify(prev_values)===JSON.stringify(values)) {
             change=false;
         }
-        return [values,score,change,count];
+        return [values,score,change];
     }
 
     moveRightOrDown(line) {
@@ -322,7 +326,10 @@ class Board extends React.Component {
 
         if(direction) {
             if(this.checkForGameOver()) {
-                alert('Game Over');
+                this.props.gameOver();
+                this.setState(this.initialState,()=>{
+                    this.componentDidMount();
+                });
             }
             else {
                 console.log('game not over');
@@ -378,7 +385,40 @@ class Game2048 extends React.Component {
         this.state={
             current_score:0,
             best_score:0,
+            renderBoard:true
         };
+    }
+
+    startNewGame() {
+        let current_score=this.state.current_score;
+        let best_score=this.state.best_score;
+        this.setState({
+            best_score:current_score>best_score?current_score:best_score,
+            current_score:0,
+            renderBoard:true
+        });
+    }
+
+    gameOver=() => {
+        this.setState({renderBoard:false});
+        ReactDOM.render(
+            <div className="main-game-end-content">
+                <h1>Game Over :-(</h1>
+                <p id="timer"></p>
+            </div>,
+            document.getElementsByClassName('main-game-end')[0]
+        );
+        document.getElementsByClassName('main-game-end')[0].classList.toggle('show');
+        var timeleft=10;
+        var timer=setInterval(function() {
+            document.getElementById('timer').innerHTML="New game will start in "+timeleft+"s";
+            timeleft-=1;
+            if(timeleft<=0) {
+                clearInterval(timer);
+                document.getElementsByClassName('main-game-end')[0].classList.toggle('show');
+            }
+        },1000)
+        this.startNewGame();
     }
 
     updateScore=(value) => {
@@ -407,9 +447,9 @@ class Game2048 extends React.Component {
                     
                 </div>
                 <div className="game2048-action">
-                    <button className="game2048-action__button" type="button">New Game</button>
+                    <button className="game2048-action__button-new-game" type="button">New Game</button>
                 </div>
-                <Board updateScore={this.updateScore}/>
+                {this.state.renderBoard?<Board updateScore={this.updateScore} gameOver={this.gameOver}/>:null}
             </div>
         )
     }
