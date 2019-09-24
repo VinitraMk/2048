@@ -58,6 +58,47 @@ class Board extends React.Component {
         //this.handleKeyDown=this.handleKeyDown.bind(this);
     }
 
+    checkForGameOver() {
+        var squares=this.state.squares.slice();
+        var values=[];
+        let n=16;
+        for(var i=0;i<squares.length;i++) {
+            values[i]=squares[i].props.value;
+        }
+        let zero_count=0;
+        zero_count=values.map(x=>x===0?++zero_count:zero_count)[n-1]
+        if(zero_count===0) {
+            for(i=0;i<4;i++) {
+                for(var j=0;j<4;j++) {
+                    let point=4*i+j;
+                    let up=4*(i-1)+j;
+                    let down=4*(i+1)+j;
+                    let right=4*i+j+1;
+                    let left=4*i+j-1;
+                    console.log(point+","+up+","+down+","+left+","+right);
+                    console.log(values[point]+","+values[up]+","+values[down]+","+values[left]+","+values[right]);
+
+                    if(up>=0 && values[point]===values[up]) {
+                        return false;
+                    }
+                    else if(down<n && values[point]===values[down]) {
+                        return false;
+                    }
+                    else if(left>=0 && values[point]===values[left]) {
+                        return false;
+                    }
+                    else if(right<n && values[point]===values[right]) {
+                        return false;
+                    }
+                }
+            }
+        }
+        else {
+            return false;
+        }
+        return true;
+    }
+
 
     moveLeftOrUp(line) {
         var values=Array(4).fill(0);
@@ -109,7 +150,7 @@ class Board extends React.Component {
         if(JSON.stringify(prev_values)===JSON.stringify(values)) {
             change=false;
         }
-        return [values,score,change];
+        return [values,score,change,count];
     }
 
     moveRightOrDown(line) {
@@ -228,6 +269,7 @@ class Board extends React.Component {
         }
 
         //Assign new squares position
+        //console.log('filled: '+non_zero_count);
         this.setState({squares:squares},()=>{
             this.props.updateScore(score);
             if(change) {
@@ -246,7 +288,14 @@ class Board extends React.Component {
             }
         }
         var ind=Math.floor(Math.random()*empty.length);
-        var in1=Math.round(Math.random());
+        var ind1=Math.random();
+        var in1=0;
+        if(ind1<0.9) {
+            in1=0;
+        }
+        else {
+            in1=1;
+        }
         squares[empty[ind]]=<Square value={init[in1]}/>;
         this.setState({squares:squares});
     }
@@ -270,9 +319,16 @@ class Board extends React.Component {
             default:
                 break;
         }
-        
-        this.setState({direction:direction},this.moveSquares);
-        
+
+        if(direction) {
+            if(this.checkForGameOver()) {
+                alert('Game Over');
+            }
+            else {
+                console.log('game not over');
+                this.setState({direction:direction},this.moveSquares);
+            }
+        }
     }
 
 
