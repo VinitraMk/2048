@@ -8,40 +8,28 @@ function Square(props) {
     switch(props.value) {
         case 0: 
             return(<div className="game2048-board__square color-zero"></div>);
-            break;
         case 2:
             return(<div className="game2048-board__square color-two"><p>{props.value}</p></div>);
-            break;
         case 4:
             return(<div className="game2048-board__square color-four"><p>{props.value}</p></div>);
-            break;
         case 8:
             return(<div className="game2048-board__square color-eight"><p>{props.value}</p></div>);
-            break;
         case 16:
             return(<div className="game2048-board__square color-sixteen"><p>{props.value}</p></div>);
-            break;
         case 32:
             return(<div className="game2048-board__square color-thirtytwo"><p>{props.value}</p></div>);
-            break;
         case 64:
             return(<div className="game2048-board__square color-sixtyfour"><p>{props.value}</p></div>);
-            break;
         case 128:
             return(<div className="game2048-board__square color-onetwoeight"><p>{props.value}</p></div>);
-            break;
         case 256:
             return(<div className="game2048-board__square color-twofivesix"><p>{props.value}</p></div>);
-            break;
         case 512:
             return(<div className="game2048-board__square color-fiveonetwo"><p>{props.value}</p></div>);
-            break;
         case 1024:
             return(<div className="game2048-board__square color-onezerotwofour"><p>{props.value}</p></div>);
-            break;
         case 2048:
             return(<div className="game2048-board__square color-twozerofoureight"><p>{props.value}</p></div>);
-            break;
         default:
             break;
     }
@@ -56,8 +44,8 @@ class Board extends React.Component {
             direction:null
         };
         this.initialState=this.state;
-        //this.handleKeyDown=this.handleKeyDown.bind(this);
     }
+
 
     checkForGameOver() {
         var squares=this.state.squares.slice();
@@ -71,27 +59,18 @@ class Board extends React.Component {
         if(zero_count===0) {
             for(i=0;i<4;i++) {
                 for(var j=0;j<4;j++) {
-                    console.log('hello: '+i+","+j)
                     let point=4*i+j;
-                    /*let up=4*(i-1)+j;
-                    let down=4*(i+1)+j;
-                    let right=4*i+j+1;
-                    let left=4*i+j-1;*/
 
                     if((i-1)>=0 && values[point]===values[4*(i-1)+j]) {
-                        console.log('hi1');
                         return false;
                     }
                     else if((i+1)<4 && values[point]===values[4*(i+1)+j]) {
-                        console.log('hi2');
                         return false;
                     }
                     else if((j-1)>=0 && values[point]===values[4*i+j-1]) {
-                        console.log('hi3');
                         return false;
                     }
                     else if((j+1)<4 && values[point]===values[4*i+j+1]) {
-                        console.log('hi4');
                         return false;
                     }
                 }
@@ -131,7 +110,6 @@ class Board extends React.Component {
                 if(prev!==-1) {
                     if(values[i]===prev) {
                         values[count-1]*=2;
-                        //this.props.updateScore(prev*2);
                         score+=(prev*2);
                         prev=-1;
                     }
@@ -150,7 +128,6 @@ class Board extends React.Component {
         for(i=count;i<4;i++) {
             values[i]=0;
         }
-        //this.props.updateScore(score);
         if(JSON.stringify(prev_values)===JSON.stringify(values)) {
             change=false;
         }
@@ -184,7 +161,6 @@ class Board extends React.Component {
                 if(prev!==-1) {
                     if(prev===values[i]) {
                         values[3-(count-1)]*=2;
-                        //this.props.updateScore(prev*2);
                         score+=(prev*2);
                         prev=-1;
                     }
@@ -228,7 +204,7 @@ class Board extends React.Component {
                 score+=arr[1];
                 change|=arr[2];
                 for(var i=0;i<4;i++) {
-                    squares[(row*4)+i]=<Square value={values[i]}/>;
+                    squares[(row*4)+i]=<Square key={(row*4)+i} value={values[i]}/>;
                 }
             }
         }
@@ -241,7 +217,7 @@ class Board extends React.Component {
                 score+=arr[1];
                 change|=arr[2];
                 for(i=0;i<4;i++) {
-                    squares[(row*4)+i]=<Square value={values[i]}/>;
+                    squares[(row*4)+i]=<Square key={(row*4)+i} value={values[i]}/>;
                 }
             }
         }
@@ -254,7 +230,7 @@ class Board extends React.Component {
                 score+=arr[1];
                 change|=arr[2];
                 for(i=0;i<4;i++) {
-                    squares[(i*4)+col]=<Square value={values[i]}/>;
+                    squares[(i*4)+col]=<Square key={(i*4)+col} value={values[i]}/>;
                 }
             }
         }
@@ -267,13 +243,12 @@ class Board extends React.Component {
                 score+=arr[1];
                 change|=arr[2];
                 for(i=0;i<4;i++) {
-                    squares[(i*4)+col]=<Square value={values[i]}/>;
+                    squares[(i*4)+col]=<Square key={(i*4)+col} value={values[i]}/>;
                 }
             }
         }
 
         //Assign new squares position
-        //console.log('filled: '+non_zero_count);
         this.setState({squares:squares},()=>{
             this.props.updateScore(score);
             if(change) {
@@ -300,7 +275,7 @@ class Board extends React.Component {
         else {
             in1=1;
         }
-        squares[empty[ind]]=<Square value={init[in1]}/>;
+        squares[empty[ind]]=<Square key={empty[ind]} value={init[in1]}/>;
         this.setState({squares:squares});
     }
 
@@ -323,18 +298,15 @@ class Board extends React.Component {
             default:
                 break;
         }
-        console.log(this.props.showBoard+","+direction);
 
         if(this.props.showBoard && direction) {
             if(this.checkForGameOver()) {
                 this.setState(this.initialState,()=>{
-                    //document.querySelector('body').removeEventListener("keydown",this.handleKeyDown.bind(this));
                     this.props.gameOver();
                     this.initBoard();
                 });
             }
             else {
-                console.log('game not over');
                 this.setState({direction:direction},this.moveSquares);
             }
         }
@@ -354,28 +326,31 @@ class Board extends React.Component {
         for(var i=0;i<16;i++){
             if(indices[0]===i || indices[1]===i) {
                 var num=Math.round(Math.random());
-                squares[i]=<Square value={init[num]}/>;
+                squares[i]=<Square key={i} value={init[num]}/>;
             }
             else {
-                squares[i]=<Square value={0}/>;
+                squares[i]=<Square key={i} value={0}/>;
             }
         }
         this.setState({squares:squares});
-        document.getElementById('main-board').classList.toggle('is-in');
     }
 
     componentDidMount() {
         console.log('mounted');
         this.initBoard();
         document.querySelector('body').addEventListener("keydown",this.handleKeyDown.bind(this));
-        //window.addEventListener("keydown",this.handleKeyDown.bind(this));
+        document.getElementById('button-new-game').addEventListener('click',()=>{
+            this.props.resetBoard();
+            this.initBoard();
+        })
     }
+
     
 
     render() {
         if(this.props.showBoard) {
             return (
-                <div className="game2048-board" id="main-board">
+                <div className="game2048-board">
                     {this.state.squares}
                 </div>
             )
@@ -397,15 +372,14 @@ class Game2048Over extends React.Component {
         this.timer=setInterval(()=>this.setState(
             {timeLimit:this.state.timeLimit-1}
         ),1000);
+        
         //this.setState({timeLimit:this.state.timeLimit-1});
     }
 
 
     render(){
-        //startTimer();
         if(this.state.timeLimit===0) {
             this.props.startNewGame();
-            //this.setState({showTimer:false})
         }
         return(
             <div className="main-game-end">
@@ -430,13 +404,12 @@ class Game2048 extends React.Component {
         };
     }
 
+
     startNewGame() {
-        console.log(this.state.renderBoard);
-        this.setState({renderBoard:true});
+        this.setState({renderBoard:true,current_score:0});
     }
 
     gameOver=() => {
-        //document.getElementsByClassName('main-game-end')[0].classList.toggle('show');
         this.setState({renderBoard:false},()=>{
             let current_score=this.state.current_score;
             let best_score=this.state.best_score;
@@ -470,12 +443,11 @@ class Game2048 extends React.Component {
                             <span className="score-value">{this.state.best_score}</span>
                         </div>
                     </div>
-                    
                 </div>
                 <div className="game2048-action">
-                    <button className="game2048-action__button-new-game" type="button" onClick={this.startNewGame}>New Game</button>
+                    <button className="game2048-action__button-new-game" type="submit" id="button-new-game">New Game</button>
                 </div>
-                <Board updateScore={this.updateScore} gameOver={this.gameOver} showBoard={this.state.renderBoard}/>
+                <Board updateScore={this.updateScore} gameOver={this.gameOver} showBoard={this.state.renderBoard} resetBoard={this.startNewGame}/>
                 {this.state.renderBoard===false?<Game2048Over startNewGame={this.startNewGame}/>:null}
             </div>
         )
