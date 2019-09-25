@@ -323,12 +323,14 @@ class Board extends React.Component {
             default:
                 break;
         }
+        console.log(this.props.showBoard+","+direction);
 
-        if(direction) {
+        if(this.props.showBoard && direction) {
             if(this.checkForGameOver()) {
-                this.props.gameOver();
                 this.setState(this.initialState,()=>{
-                    this.componentDidMount();
+                    //document.querySelector('body').removeEventListener("keydown",this.handleKeyDown.bind(this));
+                    this.props.gameOver();
+                    this.initBoard();
                 });
             }
             else {
@@ -368,20 +370,59 @@ class Board extends React.Component {
         document.querySelector('body').addEventListener("keydown",this.handleKeyDown.bind(this));
         //window.addEventListener("keydown",this.handleKeyDown.bind(this));
     }
+    
 
     render() {
-        return (
-            <div className="game2048-board" id="main-board">
-                {this.state.squares}
+        if(this.props.showBoard) {
+            return (
+                <div className="game2048-board" id="main-board">
+                    {this.state.squares}
+                </div>
+            )
+        }
+        return(null)
+    }
+
+}
+
+class Game2048Over extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state={
+            timeLimit:10
+        }
+    }
+
+    componentDidMount() {
+        this.timer=setInterval(()=>this.setState(
+            {timeLimit:this.state.timeLimit-1}
+        ),1000);
+        //this.setState({timeLimit:this.state.timeLimit-1});
+    }
+
+
+    render(){
+        //startTimer();
+        if(this.state.timeLimit===0) {
+            this.props.startNewGame();
+            //this.setState({showTimer:false})
+        }
+        return(
+            <div className="main-game-end">
+                <div className="main-game-end-content">
+                    <h1 >Game Over :-(</h1>
+                    New Game will start in
+                    <p className="new-game-timer">{this.state.timeLimit}</p>
+                </div>
             </div>
         )
     }
-
 }
 
 class Game2048 extends React.Component {
     constructor(props) {
         super(props);
+        this.startNewGame=this.startNewGame.bind(this);
         this.state={
             current_score:0,
             best_score:0,
@@ -390,35 +431,20 @@ class Game2048 extends React.Component {
     }
 
     startNewGame() {
-        let current_score=this.state.current_score;
-        let best_score=this.state.best_score;
-        this.setState({
-            best_score:current_score>best_score?current_score:best_score,
-            current_score:0,
-            renderBoard:true
-        });
+        console.log(this.state.renderBoard);
+        this.setState({renderBoard:true});
     }
 
     gameOver=() => {
-        this.setState({renderBoard:false});
-        ReactDOM.render(
-            <div className="main-game-end-content">
-                <h1>Game Over :-(</h1>
-                <p id="timer"></p>
-            </div>,
-            document.getElementsByClassName('main-game-end')[0]
-        );
-        document.getElementsByClassName('main-game-end')[0].classList.toggle('show');
-        var timeleft=10;
-        var timer=setInterval(function() {
-            document.getElementById('timer').innerHTML="New game will start in "+timeleft+"s";
-            timeleft-=1;
-            if(timeleft<=0) {
-                clearInterval(timer);
-                document.getElementsByClassName('main-game-end')[0].classList.toggle('show');
-            }
-        },1000)
-        this.startNewGame();
+        //document.getElementsByClassName('main-game-end')[0].classList.toggle('show');
+        this.setState({renderBoard:false},()=>{
+            let current_score=this.state.current_score;
+            let best_score=this.state.best_score;
+            this.setState({
+                best_score:current_score>best_score?current_score:best_score,
+                current_score:0,
+            });
+        })
     }
 
     updateScore=(value) => {
@@ -447,9 +473,10 @@ class Game2048 extends React.Component {
                     
                 </div>
                 <div className="game2048-action">
-                    <button className="game2048-action__button-new-game" type="button">New Game</button>
+                    <button className="game2048-action__button-new-game" type="button" onClick={this.startNewGame}>New Game</button>
                 </div>
-                {this.state.renderBoard?<Board updateScore={this.updateScore} gameOver={this.gameOver}/>:null}
+                <Board updateScore={this.updateScore} gameOver={this.gameOver} showBoard={this.state.renderBoard}/>
+                {this.state.renderBoard===false?<Game2048Over startNewGame={this.startNewGame}/>:null}
             </div>
         )
     }

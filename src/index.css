@@ -144,8 +144,6 @@
   max-height: 6em;
 }
 .main-game-end {
-  display: none;
-  z-index: 1;
   position: fixed;
   top: 0;
   left: 0;
@@ -162,187 +160,24 @@
   text-align: center;
   padding: 1em;
   color: #bc8f8f;
+  z-index: 1;
+  /*&__button {
+      border-radius:3px;
+      background:#bc8f8f;
+      border:none;
+      padding:10px 15px;
+      color:white;
+      cursor:pointer;
+      font-size:16px;
+  }*/
 }
-.main-game-end-content__button {
-  border-radius: 3px;
-  background: #bc8f8f;
-  border: none;
-  padding: 10px 15px;
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
+.main-game-end-content .new-game-timer {
+  font-size: 48px;
+  color: #bc8f8f;
+  text-align: center;
 }
 .main-game-end.show {
   display: block;
 }
-
-/*.game2048 {
-
-    font-family:"Comic Sans MS",sans-serif;
-
-
-    .color-zero {
-        background:#bc8f8f;
-    }
-    .color-two {
-        background:#f2f1ec;
-        color:#bc8f8f;
-    }
-    .color-four {
-        background:hsl(33, 23%, 83%);
-        color:#bc8f8f;
-    }
-    .color-eight {
-        background:#f2a039;
-        color:white;
-    }
-    .color-sixteen {
-        background:#ea8c17;
-        color:white;
-    }
-    .color-thirtytwo {
-        background:#ea6b41;
-        color:white;
-    }
-    .color-sixtyfour {
-        background:#e34009;
-        color:white;
-    }
-    .color-onetwoeight {
-        background:#eada7f;
-        color:white;
-        font-size:40px;
-    }
-    .color-twofivesix {
-        background:#eac906;
-        color:white;
-        font-size:40px;
-    }
-    .color-fiveonetwo {
-        background:#ffe64f;
-        color:white;
-        font-size:40px;
-    }
-    .color-onezerotwofour {
-        background:#f0d012;
-        color:white;
-    }
-    .color-twozerofoureight{
-        background:#f9d500;
-        color:white;
-    }
-
-    .color-two,.color-four,.color-eight,.color-sixteen,.color-thirtytwo,.color-sixtyfour {
-        p {
-            font-size:64px;
-            font-weight:bolder;
-            margin:auto;
-        }
-    }
-    .color-onetwoeight,.color-fiveonetwo,.color-twofivesix {
-        p {
-            font-size:40px;
-            font-weight:bolder;
-            margin:0.5em auto;
-        }
-    }
-
-
-    &-header {
-        width:30em;
-        min-height:6em;
-        margin:0 auto;
-        &__title {
-            float:left;
-            color:#bc8f8f;
-            font-size:48px;
-        }
-        &-score {
-            color:#fff4b6;
-            float:right;
-
-            &__current {
-                margin:5px;
-                padding:5px;
-                display:inline-block;
-                background:#bc8f8f;
-                min-height:5em;
-            }
-            &__best {
-                margin:5px;
-                padding:5px;
-                display:inline-block;
-                background:#eca053;
-                min-height:5em;
-            }
-
-            .score-title {
-                display:block;
-                margin:0 auto;
-            }
-            .score-value {
-                display:block;
-                text-align:center;
-                font-size:36px;
-            }
-
-        }
-
-    }
-
-    &-action {
-        position:relative;
-        min-height:3em;
-        width:30em;
-        margin:1em auto;
-
-        &__button {
-            position:absolute;
-            top:5px;
-            right:10px;
-            display:inline-block;
-            border-radius:3px;
-            background:#bc8f8f;
-            border:none;
-            padding:10px 15px;
-            color:white;
-            cursor:pointer;
-            font-size:16px;
-        }
-    }
-
-    &-board {
-        height:26em;
-        width:26em;
-        background:#d2b48c;
-        grid-gap:0.6em;
-        border-radius:5px;
-        margin:1em auto;
-        display:grid;
-        padding:0.6em;
-        grid-template-columns:1fr 1fr 1fr 1fr;
-        grid-template-rows:1fr 1fr 1fr 1fr;
-
-        &__square{
-            background:#bc8f8f;
-            border-radius:3px;
-            text-align:center;
-            max-width:6em;
-            max-height:6em;
-        }
-        &__square-fill {
-            margin:0 0 0 -25px;
-            transition:margin 1s;
-        }
-        &__square-fill.is-in {
-            margin-left:0;
-        }
-    }
-
-    &-game-end {
-
-    }
-
-}*/
 
 /*# sourceMappingURL=index.css.map */
